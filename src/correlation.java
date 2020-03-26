@@ -49,7 +49,8 @@ public class correlation {
                     temp.put(current_matkul, correlation_value);
                 }
             }
-            correlation_data.put(head, temp);
+                correlation_data.put(head, temp);
+            
         }
         printCorrelation();
     }
@@ -121,7 +122,7 @@ public class correlation {
         }
         double correlation = (x.size() * sum_xy) - (sum_x * sum_y);
         double divider = Math.sqrt((x.size() * sum_x_pow) - Math.pow(sum_x, 2));
-        divider *= Math.sqrt((x.size() * sum_y_pow) - Math.pow(sum_y, 2));
+        divider *= Math.sqrt((y.size() * sum_y_pow) - Math.pow(sum_y, 2));
         correlation = correlation / divider;
         if (divider != 0) {
             return correlation;

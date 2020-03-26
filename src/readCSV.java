@@ -25,6 +25,7 @@ public class readCSV {
     TreeMap<String, List<mahasiswa>> data_mahasiswa = new TreeMap<>();
     TreeMap<String, List<Integer>> data_nilai = new TreeMap<>();
     List<mahasiswa> data_mahasiswa_temp;
+    HashMap semester = new HashMap<String, String>();
 
     public void read(String file_path, double tahun) throws FileNotFoundException, IOException {
         String path = file_path;
@@ -36,8 +37,6 @@ public class readCSV {
                 records.add(line);
             }
         }
-
-        HashMap semester = new HashMap<String, String>();
 
         for (int i = 0; i < records.size(); i++) {
             String[] data = records.get(i).split("\t");
@@ -52,53 +51,17 @@ public class readCSV {
                 } else {
                     String matkul = data[1];
                     String nilai = data[2];
-                    semester.put(matkul, nilai);
-                    if (matkul.compareToIgnoreCase("") != 0) {
-                        semester.put(matkul, nilai);
-                        if (data_nilai.get(matkul) == null) {
-                            List<Integer> nilai_list = new ArrayList<>();
-                            nilai_list.add(nilaiToInt(nilai));
-                            data_nilai.put(matkul, nilai_list);
-                        } else {
-                            List<Integer> nilai_list = data_nilai.get(matkul);
-                            nilai_list.add(nilaiToInt(nilai));
-                            data_nilai.replace(matkul, nilai_list);
-                        }
-                    }
+                    insertData(matkul, nilai);
+
                 }
             } else if (data.length == 8) { // full data
                 String matkul = data[1];
                 String nilai = data[2];
-                if (data[1].compareToIgnoreCase("") != 0) {
-                    semester.put(matkul, nilai);
-
-                    if (data_nilai.get(matkul) == null) {
-                        List<Integer> nilai_list = new ArrayList<>();
-                        nilai_list.add(nilaiToInt(nilai));
-                        data_nilai.put(matkul, nilai_list);
-                    } else {
-                        List<Integer> nilai_list = data_nilai.get(matkul);
-                        nilai_list.add(nilaiToInt(nilai));
-                        data_nilai.replace(matkul, nilai_list);
-                    }
-                }
+                insertData(matkul, nilai);
 
                 matkul = data[5];
                 nilai = data[6];
-                if (data[5].compareToIgnoreCase("") != 0) {
-                    semester.put(matkul, nilai);
-
-                    if (data_nilai.get(matkul) == null) {
-                        List<Integer> nilai_list = new ArrayList<>();
-                        nilai_list.add(nilaiToInt(nilai));
-                        data_nilai.put(matkul, nilai_list);
-                    } else {
-                        List<Integer> nilai_list = data_nilai.get(matkul);
-                        nilai_list.add(nilaiToInt(nilai));
-                        data_nilai.replace(matkul, nilai_list);
-                    }
-                }
-
+                insertData(matkul, nilai);
             }
         }
 
@@ -109,6 +72,31 @@ public class readCSV {
         } else {
             recent.addAll(data_mahasiswa_temp);
             data_mahasiswa.put("" + tahun, recent);
+        }
+    }
+
+    private void insertData(String matkul, String nilai) {
+        if (matkul.compareToIgnoreCase("") != 0) {
+            if (!matkul.contains("[X]")) {
+                matkul = matkul.split("<<")[0].trim();
+                nilai = nilai = nilai.split("-")[0].trim();
+
+                if (semester.get(matkul) != null) {
+                    semester.replace(matkul, nilai);
+                } else {
+                    semester.put(matkul.trim(), nilai);
+                }
+                if (data_nilai.get(matkul) == null) {
+                    List<Integer> nilai_list = new ArrayList<>();
+                    nilai_list.add(nilaiToInt(nilai));
+                    data_nilai.put(matkul, nilai_list);
+                } else {
+                    List<Integer> nilai_list = data_nilai.get(matkul);
+                    nilai_list.add(nilaiToInt(nilai));
+                    data_nilai.replace(matkul, nilai_list);
+                }
+                System.out.println("NILAI : _" + nilai + "_");
+            }
         }
     }
 
@@ -125,8 +113,8 @@ public class readCSV {
             return 0;
         }
     }
-    
-    public List<mahasiswa> getAllMahasiswa(){
+
+    public List<mahasiswa> getAllMahasiswa() {
         List<mahasiswa> all_mahasiswa = new ArrayList<>();
         Collection<List<mahasiswa>> values = data_mahasiswa.values();
         for (Iterator<List<mahasiswa>> iterator = values.iterator(); iterator.hasNext();) {

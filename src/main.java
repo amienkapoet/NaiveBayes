@@ -58,6 +58,7 @@ public class main {
 //        System.out.println("---------------------------------------------------");
         correlation correlation = new correlation(data.getAllMahasiswa(), data.data_nilai);
         correlation.calculate();
-        System.out.println("Mahasiswa : " + data.getAllMahasiswa().size());
+//        System.out.println("Mahasiswa : " + data.getAllMahasiswa().size());
+//        System.out.println("====> "+correlation.correlation_data.get("Pemrograman Berorientasi Objek").get("Arsitektur & Organisasi Komputer"));
     }
 }
