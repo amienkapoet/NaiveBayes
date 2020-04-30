@@ -35,6 +35,14 @@ public class mahasiswa {
         return nilaiToInt(nilai.get(key));
     }
     
+    public String getNilaiString(String matkul) {
+        String s_nilai = nilai.get(matkul);
+        if(s_nilai == null){
+            return "";
+        }
+        return s_nilai;
+    }
+    
     public int nilaiToInt(String nilai) {
         if (nilai.compareToIgnoreCase("A") == 0) {
             return 4;
@@ -46,6 +54,14 @@ public class mahasiswa {
             return 1;
         } else {
             return 0;
+        }
+    }
+    
+    public boolean hasMatkul(String matkul){
+        if(nilai.containsKey(matkul)){
+            return true;
+        }else{
+            return false;
         }
     }
 

@@ -95,7 +95,6 @@ public class readCSV {
                     nilai_list.add(nilaiToInt(nilai));
                     data_nilai.replace(matkul, nilai_list);
                 }
-                System.out.println("NILAI : _" + nilai + "_");
             }
         }
     }
