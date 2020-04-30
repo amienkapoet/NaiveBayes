@@ -1,5 +1,6 @@
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -24,14 +25,20 @@ public class NaiveBayes {
     public void probsPerYear(TreeMap<String, String> predict_data){
         Set<String> set_datas_key = predict_data.keySet();
         String[] data_matkul = set_datas_key.toArray(new String[set_datas_key.size()]);
+        TreeMap<String, TreeMap<String, Double>> new_data = new TreeMap<>();
         for (int i = 0; i < data_matkul.length; i++) {
             String matkul = data_matkul[i];
             String nilai = predict_data.get(matkul);
             TreeMap<String, Double> vals = calc(matkul, nilai);
-            System.out.println("---> "+matkul);
-            System.out.println("KEYS : "+vals.keySet());
-            System.out.println("VALS : "+vals.values());
-            System.out.println("________________________________________");
+            new_data.put(matkul, vals);
+        }
+        for (Map.Entry<String, TreeMap<String, Double>> entry : new_data.entrySet()) {
+            String key = entry.getKey();
+            TreeMap<String, Double> value = entry.getValue();
+            System.out.println("=> "+key);
+            System.out.println("Tahun : "+value.keySet());
+            System.out.println("VALS : "+value.values());
+            System.out.println("_________________________________________");
         }
     }
     
