@@ -22,14 +22,21 @@ public class NaiveBayes {
         this.data_mahasiswa = data_mahasiswa;
     }
     
-    public void probsPerYear(TreeMap<String, String> predict_data){
+    public void predict(TreeMap<String, String> predict_data){
+        probsPerYear(predict_data);
+    }
+    
+    private void probsPerYear(TreeMap<String, String> predict_data){
+        // Ambil semua matkul dari mahasiswa yang akan dipredict
         Set<String> set_datas_key = predict_data.keySet();
         String[] data_matkul = set_datas_key.toArray(new String[set_datas_key.size()]);
+        // new_data => key: matkul, value : HASHMAP
+        // hashmap => String tahun (3.5, 4, ... 7) , Double value => nilai
         TreeMap<String, TreeMap<String, Double>> new_data = new TreeMap<>();
         for (int i = 0; i < data_matkul.length; i++) {
             String matkul = data_matkul[i];
             String nilai = predict_data.get(matkul);
-            TreeMap<String, Double> vals = calc(matkul, nilai);
+            TreeMap<String, Double> vals = calcPerMatkulPerYear(matkul, nilai);
             new_data.put(matkul, vals);
         }
         for (Map.Entry<String, TreeMap<String, Double>> entry : new_data.entrySet()) {
@@ -42,7 +49,8 @@ public class NaiveBayes {
         }
     }
     
-    public TreeMap<String, Double> calc(String matkul, String nilai){
+    private TreeMap<String, Double> calcPerMatkulPerYear(String matkul, String nilai){
+        // semua key : tahun, value => list of mahasiswa
         TreeMap<String, Double> res = new TreeMap<>();
         Set<String> set_datas_key = data_mahasiswa.keySet();
         String[] tahun = set_datas_key.toArray(new String[set_datas_key.size()]);
@@ -64,3 +72,9 @@ public class NaiveBayes {
         return res;
     }
 }
+
+
+// x = kaliin semua matkul berdasarkan tahun
+// y = x * (jumlah mahasiswa di tahun Y / total_mahasiswa_keseluruhan (3.5-7)
+// y = 0.7 * (50/200)
+// chance 3.5 berapa ? 4 ? 5 ?

@@ -72,13 +72,14 @@ public class main {
         TreeMap<String, String> predict_data = new TreeMap<>();
         predict_data.put("Etika", "A");
         predict_data.put("Pendidikan Pancasila", "B");
-        predict_data.put("Pemrograman Berorientasi Objek", "C");
+        predict_data.put("Pemrograman Berorientasi Objek", "A");
+        predict_data.put("Arsitektur & Organisasi Komputer", "A");
         
         System.out.println(predict_data.keySet());
         System.out.println(predict_data.values());
         
         NaiveBayes nb = new NaiveBayes(data.data_mahasiswa);
-        nb.probsPerYear(predict_data);
+        nb.predict(predict_data);
     }
     
     public static int nilaiToInt(String nilai) {
