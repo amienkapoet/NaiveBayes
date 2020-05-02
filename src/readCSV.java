@@ -24,12 +24,12 @@ public class readCSV {
 
     TreeMap<String, List<mahasiswa>> data_mahasiswa = new TreeMap<>();
     TreeMap<String, List<Integer>> data_nilai = new TreeMap<>();
-    List<mahasiswa> data_mahasiswa_temp;
-    HashMap semester = new HashMap<String, String>();
+    TreeMap semester = new TreeMap<String, String>();
+    int jumlahMahasiswa = 0;
 
     public void read(String file_path, double tahun) throws FileNotFoundException, IOException {
         String path = file_path;
-        data_mahasiswa_temp = new ArrayList<>();
+        List<mahasiswa> data_mahasiswa_temp = new ArrayList<>();
         List<String> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -37,17 +37,26 @@ public class readCSV {
                 records.add(line);
             }
         }
-
+        
         for (int i = 0; i < records.size(); i++) {
             String[] data = records.get(i).split("\t");
+//            System.out.println("===> "+data[0]+" / "+data.length);
+            if (data.length == 1){
+                if(data[0].contains("+")){
+                    mahasiswa m = new mahasiswa(tahun, semester);
+                    jumlahMahasiswa++;
+                    data_mahasiswa_temp.add(m);
+                    semester = new TreeMap<String, String>();
+                }
+            }
             if (data.length == 4) { // semester
                 String data_split[] = data[0].split(" ");
-                if (data_split[0].contains("SEMESTER")) {
+                
+                if (data_split[0].contains("SEMESTER 1") || data_split[0].contains("+") ) {
                     mahasiswa m = new mahasiswa(tahun, semester);
-//                    m.printNilai();
                     data_mahasiswa_temp.add(m);
-                    semester = new HashMap<String, String>();
-
+                    jumlahMahasiswa++;
+                    semester = new TreeMap<String, String>();
                 } else {
                     String matkul = data[1];
                     String nilai = data[2];
@@ -58,7 +67,6 @@ public class readCSV {
                 String matkul = data[1];
                 String nilai = data[2];
                 insertData(matkul, nilai);
-
                 matkul = data[5];
                 nilai = data[6];
                 insertData(matkul, nilai);
@@ -67,9 +75,11 @@ public class readCSV {
 
         List<mahasiswa> recent = data_mahasiswa.get("" + tahun);
         if (recent == null) {
+//            System.out.println("PRESENT : "+tahun);
             recent = data_mahasiswa_temp;
             data_mahasiswa.put("" + tahun, recent);
         } else {
+//            System.out.println("EMPTY : "+tahun);
             recent.addAll(data_mahasiswa_temp);
             data_mahasiswa.put("" + tahun, recent);
         }
@@ -79,7 +89,7 @@ public class readCSV {
         if (matkul.compareToIgnoreCase("") != 0) {
             if (!matkul.contains("[X]")) {
                 matkul = matkul.split("<<")[0].trim();
-                nilai = nilai = nilai.split("-")[0].trim();
+                nilai = nilai.split("-")[0].trim();
 
                 if (semester.get(matkul) != null) {
                     semester.replace(matkul, nilai);

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  *
@@ -16,9 +17,9 @@ import java.util.Set;
 public class mahasiswa {
 
     private double lulus;
-    private HashMap<String, String> nilai = new HashMap<String, String>();
+    public TreeMap<String, String> nilai = new TreeMap<String, String>();
 
-    public mahasiswa(double lulus, HashMap nilai) {
+    public mahasiswa(double lulus, TreeMap nilai) {
         this.lulus = lulus;
         this.nilai = nilai;
     }

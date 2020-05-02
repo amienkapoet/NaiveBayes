@@ -24,7 +24,8 @@ import java.util.TreeMap;
 public class main {
 
     public static void main(String[] args) throws IOException {
-        String folder_path = "src\\data\\";
+//        String folder_path = "src\\AllData\\";
+        String folder_path = "src\\DataTesting\\";
         File folder = new File(folder_path);
         File[] listOfFiles = folder.listFiles();
         readCSV data = new readCSV();
@@ -40,21 +41,16 @@ public class main {
                     tahun += 1;
                 }
                 data.read(filename, tahun);
+//                break;
             }
         }
-        
+//        
 //        List<String> keys = new ArrayList<String>();
 //        keys.addAll(data.data_mahasiswa.keySet());
 //        int x = 0;
 //        for (int i = 0; i < keys.size(); i++) {
-//            List<mahasiswa> datas = data.data_mahasiswa.get(keys.get(i));
-//            int y = 0;
-//            for (int j = 0; j < datas.size(); j++) {
-//                x++;
-//                y++;
-//            }
-//            
-//            System.out.println("==>" + keys.get(i) + " = " + y);
+//            List<mahasiswa> datas = data.data_mahasiswa.get(keys.get(i));            
+//            System.out.println("==>" + keys.get(i) + " = " + datas.size());
 //        }
 //        
 //        System.out.println("TOTAL : "+x);
@@ -70,15 +66,15 @@ public class main {
 
         Scanner sc = new Scanner(System.in);
         TreeMap<String, String> predict_data = new TreeMap<>();
-        predict_data.put("Etika", "A");
-        predict_data.put("Pendidikan Pancasila", "B");
-        predict_data.put("Pemrograman Berorientasi Objek", "A");
-        predict_data.put("Arsitektur & Organisasi Komputer", "A");
+        predict_data.put("Algoritma & Struktur Data", "B");
+        predict_data.put("Pemrograman Berorientasi Objek", "B");
+        predict_data.put("Manajemen Informasi & Basis Data", "C");
+        predict_data.put("Desain & Analisis Algoritma", "C");
         
         System.out.println(predict_data.keySet());
         System.out.println(predict_data.values());
         
-        NaiveBayes nb = new NaiveBayes(data.data_mahasiswa);
+        NaiveBayes nb = new NaiveBayes(data.data_mahasiswa, data.jumlahMahasiswa);
         nb.predict(predict_data);
     }
     

@@ -9,48 +9,74 @@ import java.util.TreeMap;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author ZerD
  */
 public class NaiveBayes {
-    
-    private TreeMap<String, List<mahasiswa>> data_mahasiswa = new TreeMap<>();
-    
-    public NaiveBayes(TreeMap<String, List<mahasiswa>> data_mahasiswa){
+
+    private TreeMap<String, List<mahasiswa>> data_mahasiswa;
+    private TreeMap<String, TreeMap<String, Double>> probs;
+    private double jumlahMahasiswa;
+
+    public NaiveBayes(TreeMap<String, List<mahasiswa>> data_mahasiswa, double jumlahMahasiswa) {
         this.data_mahasiswa = data_mahasiswa;
+        this.jumlahMahasiswa = jumlahMahasiswa;
     }
-    
-    public void predict(TreeMap<String, String> predict_data){
-        probsPerYear(predict_data);
+
+    public void predict(TreeMap<String, String> predict_data) {
+        calcProbs(predict_data);
+//        printProbs();
+        doPredict();
+        printPredict();
     }
-    
-    private void probsPerYear(TreeMap<String, String> predict_data){
-        // Ambil semua matkul dari mahasiswa yang akan dipredict
+
+    private void calcProbs(TreeMap<String, String> predict_data) {
         Set<String> set_datas_key = predict_data.keySet();
         String[] data_matkul = set_datas_key.toArray(new String[set_datas_key.size()]);
-        // new_data => key: matkul, value : HASHMAP
-        // hashmap => String tahun (3.5, 4, ... 7) , Double value => nilai
-        TreeMap<String, TreeMap<String, Double>> new_data = new TreeMap<>();
+        probs = new TreeMap<>();
         for (int i = 0; i < data_matkul.length; i++) {
             String matkul = data_matkul[i];
             String nilai = predict_data.get(matkul);
-            TreeMap<String, Double> vals = calcPerMatkulPerYear(matkul, nilai);
-            new_data.put(matkul, vals);
+            TreeMap<String, Double> vals = calcProbMatkulYear(matkul, nilai);
+            probs.put(matkul, vals);
+//            break;
         }
-        for (Map.Entry<String, TreeMap<String, Double>> entry : new_data.entrySet()) {
+    }
+
+    private void printProbs() {
+        for (Map.Entry<String, TreeMap<String, Double>> entry : probs.entrySet()) {
             String key = entry.getKey();
             TreeMap<String, Double> value = entry.getValue();
-            System.out.println("=> "+key);
-            System.out.println("Tahun : "+value.keySet());
-            System.out.println("VALS : "+value.values());
+            System.out.println("=> " + key);
+            System.out.println("Tahun : " + value.keySet());
+            System.out.println("VALS : " + value.values());
             System.out.println("_________________________________________");
         }
     }
-    
-    private TreeMap<String, Double> calcPerMatkulPerYear(String matkul, String nilai){
-        // semua key : tahun, value => list of mahasiswa
+
+    private void printPredict() {
+        String graduate = "-";
+        double max = 0;
+        for (Map.Entry<String, Double> entry : predict.entrySet()) {
+            String key = entry.getKey();
+            Double value = entry.getValue();
+//            System.out.printf("%.20f > %.20f \n", value, max);
+            if (value > max) {
+                max = value;
+                graduate = key;
+            }
+            System.out.println("=> " + key);
+            System.out.printf("Predict Value : %.20f \n", value);
+            System.out.println("____________________________________________________________________________________________");
+        }
+        System.out.println("GRADUATE IN : " + graduate + " years.");
+        System.out.printf("Predict Value : %.20f \n", max);
+    }
+
+    TreeMap<String, Double> predict = new TreeMap<>();
+
+    private TreeMap<String, Double> calcProbMatkulYear(String matkul, String nilai) {
         TreeMap<String, Double> res = new TreeMap<>();
         Set<String> set_datas_key = data_mahasiswa.keySet();
         String[] tahun = set_datas_key.toArray(new String[set_datas_key.size()]);
@@ -60,21 +86,35 @@ public class NaiveBayes {
             double total_mahasiswa_with_same_val = 0;
             for (int j = 0; j < list_mahasiswa.size(); j++) {
                 mahasiswa curr_mahasiswa = list_mahasiswa.get(j);
-                if(curr_mahasiswa.hasMatkul(matkul)){
+                if (curr_mahasiswa.hasMatkul(matkul)) {
                     total_mahasiswa++;
-                    if(curr_mahasiswa.getNilaiString(matkul).compareToIgnoreCase(nilai)==0){
+                    if (curr_mahasiswa.getNilaiString(matkul).compareToIgnoreCase(nilai) == 0) {
                         total_mahasiswa_with_same_val++;
                     }
                 }
             }
-            res.put(tahun[i], total_mahasiswa_with_same_val/total_mahasiswa);
+            double val = total_mahasiswa_with_same_val / total_mahasiswa;
+            res.put(tahun[i], val);
         }
         return res;
     }
+    
+    private void doPredict(){
+        for (Map.Entry<String, TreeMap<String, Double>> entry : probs.entrySet()) {
+            String matkul = entry.getKey();
+            TreeMap<String, Double> values = entry.getValue();
+            for (Map.Entry<String, Double> entry1 : values.entrySet()) {
+                String year = entry1.getKey();
+                Double value = entry1.getValue();
+                if(predict.containsKey(year)){
+                    Double curr_val = predict.get(year);
+                    predict.replace(year, value * curr_val);
+                }else{
+                    predict.put(year, value * ( data_mahasiswa.get(""+year).size() / jumlahMahasiswa));
+                }
+            }
+        }
+        System.out.println("TAHUN : "+predict.keySet());
+        System.out.println("VALUE : "+predict.values());
+    }
 }
-
-
-// x = kaliin semua matkul berdasarkan tahun
-// y = x * (jumlah mahasiswa di tahun Y / total_mahasiswa_keseluruhan (3.5-7)
-// y = 0.7 * (50/200)
-// chance 3.5 berapa ? 4 ? 5 ?
