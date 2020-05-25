@@ -38,6 +38,7 @@ public class NaiveBayes {
         for (int i = 0; i < data_matkul.length; i++) {
             String matkul = data_matkul[i];
             String nilai = predict_data.get(matkul);
+            System.out.println("-------> NILAI : "+nilai);
             TreeMap<String, Double> vals = calcProbMatkulYear(matkul, nilai);
             probs.put(matkul, vals);
 //            break;

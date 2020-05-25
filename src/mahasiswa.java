@@ -18,10 +18,12 @@ public class mahasiswa {
 
     private double lulus;
     public TreeMap<String, String> nilai = new TreeMap<String, String>();
+    public String info;
 
-    public mahasiswa(double lulus, TreeMap nilai) {
+    public mahasiswa(double lulus, TreeMap nilai, String info) {
         this.lulus = lulus;
         this.nilai = nilai;
+        this.info = info;
     }
 
     public double getLulus() {

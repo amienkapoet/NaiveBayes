@@ -51,12 +51,15 @@ public class main {
                 } else {
                     tahun += 1;
                 }
-                data.read(filename, tahun);
+                data.read(filename, tahun, filename);
             }
         }
-        
-        String[]  filter = new String[]{"Algoritma & Struktur Data", "Pemrograman Berorientasi Objek", "Manajemen Informasi & Basis Data", "Desain & Analisis Algoritma"};
-        
+
+        System.out.println("JUMLAH MAHASISWA : " + data.jumlahMahasiswa);
+
+        String[] filter = new String[]{"Algoritma & Struktur Data", "Pemrograman Berorientasi Objek", "Manajemen Informasi & Basis Data", "Desain & Analisis Algoritma"};
+
+        int counter = 0;
         if (mode == 1) {
             for (int i = 0; i < n_partition; i++) {
                 System.out.println("PARTITION " + (i + 1));
@@ -104,12 +107,16 @@ public class main {
 //                System.out.println("___________________________________________________");
                 for (int j = 0; j < data_test.size(); j++) {
                     mahasiswa m = data_test.get(j);
-                    TreeMap<String, String> nilai = filterNilai(m.nilai, filter);
-                    NaiveBayes nb = new NaiveBayes(data_train, jumlahMahasiswa);
-                    nb.predict(nilai);
-                    break;
+                    if (m.nilai.values().size() != 0) {
+                        TreeMap<String, String> nilai = filterNilai(m.nilai, filter);
+                        NaiveBayes nb = new NaiveBayes(data_train, jumlahMahasiswa);
+                        nb.predict(nilai);
+                    } else {
+                        System.out.println("MAHASISWA -------------------------------------------------------------------------------------------------> "+m.info);
+                        counter++;
+                    }
                 }
-                break;
+                System.out.println("counter = " + counter);
             }
         } else {
             TreeMap<String, String> predict_data = new TreeMap<>();

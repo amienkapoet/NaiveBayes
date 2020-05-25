@@ -35,7 +35,7 @@ public class readCSV {
         }
     }
 
-    public void read(String file_path, double tahun) throws FileNotFoundException, IOException {
+    public void read(String file_path, double tahun, String info) throws FileNotFoundException, IOException {
 
         String path = file_path;
         List<mahasiswa> data_mahasiswa_temp = new ArrayList<>();
@@ -46,30 +46,29 @@ public class readCSV {
                 records.add(line);
             }
         }
-
+        int nMahasiswa = 0;
         for (int i = 0; i < records.size(); i++) {
             String[] data = records.get(i).split("\t");
             if (data.length == 1) {
                 if (data[0].contains("+")) {
-                    mahasiswa m = new mahasiswa(tahun, semester);
+                    mahasiswa m = new mahasiswa(tahun, semester, info + " (" + nMahasiswa + ")");
                     jumlahMahasiswa++;
                     data_mahasiswa_temp.add(m);
                     semester = new TreeMap<String, String>();
                 }
             }
             if (data.length == 4) { // semester
-                String data_split[] = data[0].split(" ");
-
-                if (data_split[0].contains("SEMESTER 1") || data_split[0].contains("+")) {
-                    mahasiswa m = new mahasiswa(tahun, semester);
-                    data_mahasiswa_temp.add(m);
-                    jumlahMahasiswa++;
-                    semester = new TreeMap<String, String>();
-                } else {
-                    String matkul = data[1];
-                    String nilai = data[2];
-                    insertData(matkul, nilai);
-
+                if (semester.values().size() != 0) {
+                    if (data[0].contains("SEMESTER 1") || data[0].contains("+")) {
+                        mahasiswa m = new mahasiswa(tahun, semester, info + " (" + nMahasiswa + ")");
+                        data_mahasiswa_temp.add(m);
+                        jumlahMahasiswa++;
+                        semester = new TreeMap<String, String>();
+                    } else {
+                        String matkul = data[1];
+                        String nilai = data[2];
+                        insertData(matkul, nilai);
+                    }
                 }
             } else if (data.length == 8) {
                 String matkul = data[1];
