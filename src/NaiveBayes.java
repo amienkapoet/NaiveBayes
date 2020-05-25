@@ -26,7 +26,7 @@ public class NaiveBayes {
 
     public void predict(TreeMap<String, String> predict_data) {
         calcProbs(predict_data);
-//        printProbs();
+        printProbs();
         doPredict();
         printPredict();
     }
@@ -94,27 +94,30 @@ public class NaiveBayes {
                 }
             }
             double val = total_mahasiswa_with_same_val / total_mahasiswa;
+            if (0 == total_mahasiswa) {
+                val = 0;
+            }
             res.put(tahun[i], val);
         }
         return res;
     }
-    
-    private void doPredict(){
+
+    private void doPredict() {
         for (Map.Entry<String, TreeMap<String, Double>> entry : probs.entrySet()) {
             String matkul = entry.getKey();
             TreeMap<String, Double> values = entry.getValue();
             for (Map.Entry<String, Double> entry1 : values.entrySet()) {
                 String year = entry1.getKey();
                 Double value = entry1.getValue();
-                if(predict.containsKey(year)){
+                if (predict.containsKey(year)) {
                     Double curr_val = predict.get(year);
                     predict.replace(year, value * curr_val);
-                }else{
-                    predict.put(year, value * ( data_mahasiswa.get(""+year).size() / jumlahMahasiswa));
+                } else {
+                    predict.put(year, value * (data_mahasiswa.get("" + year).size() / jumlahMahasiswa));
                 }
             }
         }
-        System.out.println("TAHUN : "+predict.keySet());
-        System.out.println("VALUE : "+predict.values());
+        System.out.println("TAHUN : " + predict.keySet());
+        System.out.println("VALUE : " + predict.values());
     }
 }
