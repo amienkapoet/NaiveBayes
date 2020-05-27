@@ -26,7 +26,7 @@ public class NaiveBayes {
 
     public void predict(TreeMap<String, String> predict_data) {
         calcProbs(predict_data);
-        printProbs();
+//        printProbs();
         doPredict();
         printPredict();
     }
@@ -35,10 +35,11 @@ public class NaiveBayes {
         Set<String> set_datas_key = predict_data.keySet();
         String[] data_matkul = set_datas_key.toArray(new String[set_datas_key.size()]);
         probs = new TreeMap<>();
+        System.out.println("NILAI = ");
         for (int i = 0; i < data_matkul.length; i++) {
             String matkul = data_matkul[i];
             String nilai = predict_data.get(matkul);
-            System.out.println("-------> NILAI : "+nilai);
+            System.out.println("- "+matkul+" : "+nilai);
             TreeMap<String, Double> vals = calcProbMatkulYear(matkul, nilai);
             probs.put(matkul, vals);
 //            break;
@@ -62,17 +63,14 @@ public class NaiveBayes {
         for (Map.Entry<String, Double> entry : predict.entrySet()) {
             String key = entry.getKey();
             Double value = entry.getValue();
-//            System.out.printf("%.20f > %.20f \n", value, max);
             if (value > max) {
                 max = value;
                 graduate = key;
             }
-            System.out.println("=> " + key);
-            System.out.printf("Predict Value : %.20f \n", value);
-            System.out.println("____________________________________________________________________________________________");
         }
         System.out.println("GRADUATE IN : " + graduate + " years.");
         System.out.printf("Predict Value : %.20f \n", max);
+        System.out.println("_____________________________________________________________________________");
     }
 
     TreeMap<String, Double> predict = new TreeMap<>();
@@ -118,7 +116,7 @@ public class NaiveBayes {
                 }
             }
         }
-        System.out.println("TAHUN : " + predict.keySet());
-        System.out.println("VALUE : " + predict.values());
+//        System.out.println("TAHUN : " + predict.keySet());
+//        System.out.println("VALUE : " + predict.values());
     }
 }

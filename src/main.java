@@ -59,64 +59,51 @@ public class main {
 
         String[] filter = new String[]{"Algoritma & Struktur Data", "Pemrograman Berorientasi Objek", "Manajemen Informasi & Basis Data", "Desain & Analisis Algoritma"};
 
-        int counter = 0;
         if (mode == 1) {
+            int n = 1;
+            List<TreeMap<String, List<mahasiswa>>> partition = data.partition;
             for (int i = 0; i < n_partition; i++) {
-                System.out.println("PARTITION " + (i + 1));
-                data.partition.get(i).entrySet().forEach(entry -> {
-                    System.out.println(entry.getKey() + " : " + entry.getValue().size());
-                });
-                System.out.println("_______________________________________");
-            }
-            for (int i = 0; i < data.partition.size(); i++) {
                 List<mahasiswa> data_test = new ArrayList<>();
-                TreeMap<String, List<mahasiswa>> data_train = new TreeMap<>();
-                int jumlahMahasiswa = 0;
-                for (int j = 0; j < data.partition.size(); j++) {
+                TreeMap<String, List<mahasiswa>> data_train = defineDataTrain();
+
+                System.out.println("PARTITION " + (i + 1));
+                int n_data_test = 0;
+                int n_data_train = 0;
+                for (int j = 0; j < n_partition; j++) {
+                    TreeMap<String, List<mahasiswa>> curr_partition = partition.get(j);
+
                     if (i == j) {
-                        List<List<mahasiswa>> vals = new ArrayList(data.partition.get(j).values());
-                        vals.forEach((next) -> {
-                            for (Iterator<mahasiswa> iterator1 = next.iterator(); iterator1.hasNext();) {
-                                data_test.add(iterator1.next());
-                            }
-                        });
-                    } else {
-                        TreeMap<String, List<mahasiswa>> vals = data.partition.get(j);
-                        for (Map.Entry<String, List<mahasiswa>> entry : vals.entrySet()) {
-                            String key = entry.getKey();
-                            List<mahasiswa> value = entry.getValue();
-                            jumlahMahasiswa += value.size();
-                            if (!value.isEmpty()) {
-                                List<mahasiswa> recent = data_train.get(key);
-                                if (recent == null) {
-                                    recent = value;
-                                } else {
-                                    recent.addAll(value);
-                                }
-                                data_train.put(key, recent);
-                            }
+                        for (Map.Entry<String, List<mahasiswa>> entry : curr_partition.entrySet()) {
+                            data_test.addAll(entry.getValue());
                         }
+                    } else {
+                        curr_partition.entrySet().forEach((entry) -> {
+                            String key = entry.getKey();
+                            List<mahasiswa> vals = entry.getValue();
+                            List<mahasiswa> recent = data_train.get(key);
+                            recent.addAll(vals);
+                            data_train.replace(key, recent);
+                        });
                     }
 
                 }
-//                System.out.println("DATA TEST Baris ke-" + (i + 1) + ": " + data_test.size());
-//                System.out.println("Data mahasiswa : ");
-//                data_mahasiswa.entrySet().forEach(entry -> {
-//                    System.out.println(entry.getKey() + " : " + entry.getValue().size());
-//                });
-//                System.out.println("___________________________________________________");
-                for (int j = 0; j < data_test.size(); j++) {
-                    mahasiswa m = data_test.get(j);
-                    if (m.nilai.values().size() != 0) {
-                        TreeMap<String, String> nilai = filterNilai(m.nilai, filter);
-                        NaiveBayes nb = new NaiveBayes(data_train, jumlahMahasiswa);
-                        nb.predict(nilai);
-                    } else {
-                        System.out.println("MAHASISWA -------------------------------------------------------------------------------------------------> "+m.info);
-                        counter++;
-                    }
+
+                for (Map.Entry<String, List<mahasiswa>> entry : data_train.entrySet()) {
+                    String key = entry.getKey();
+                    List<mahasiswa> value = entry.getValue();
+                    n_data_train += value.size();
                 }
-                System.out.println("counter = " + counter);
+                System.out.println("Total test = " + data_test.size());
+                System.out.println("Total train = " + n_data_train);
+                for (Iterator<mahasiswa> iterator = data_test.iterator(); iterator.hasNext();) {
+                    mahasiswa m = iterator.next();
+                    System.out.println("Mahasiswa ke-" + n);
+                    System.out.println("info = " + m.info);
+                    TreeMap<String, String> nilai = filterNilai(m.nilai, filter);
+                    NaiveBayes nb = new NaiveBayes(data_train, n_data_train);
+                    nb.predict(nilai);
+                    n++;
+                }
             }
         } else {
             TreeMap<String, String> predict_data = new TreeMap<>();
@@ -145,6 +132,19 @@ public class main {
         } else {
             return 0;
         }
+    }
+
+    public static TreeMap<String, List<mahasiswa>> defineDataTrain() {
+        TreeMap<String, List<mahasiswa>> blank_data = new TreeMap<>();
+        blank_data.put("3.5", new ArrayList<>());
+        blank_data.put("4.0", new ArrayList<>());
+        blank_data.put("4.5", new ArrayList<>());
+        blank_data.put("5.0", new ArrayList<>());
+        blank_data.put("5.5", new ArrayList<>());
+        blank_data.put("6.0", new ArrayList<>());
+        blank_data.put("6.5", new ArrayList<>());
+        blank_data.put("7.0", new ArrayList<>());
+        return blank_data;
     }
 
     private static TreeMap<String, String> filterNilai(TreeMap<String, String> nilai, String filter[]) {

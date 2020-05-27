@@ -55,6 +55,7 @@ public class readCSV {
                     jumlahMahasiswa++;
                     data_mahasiswa_temp.add(m);
                     semester = new TreeMap<String, String>();
+                    nMahasiswa++;
                 }
             }
             if (data.length == 4) { // semester
@@ -63,6 +64,7 @@ public class readCSV {
                         mahasiswa m = new mahasiswa(tahun, semester, info + " (" + nMahasiswa + ")");
                         data_mahasiswa_temp.add(m);
                         jumlahMahasiswa++;
+                        nMahasiswa++;
                         semester = new TreeMap<String, String>();
                     } else {
                         String matkul = data[1];
@@ -92,27 +94,22 @@ public class readCSV {
                 data_mahasiswa.put("" + tahun, recent);
             }
         }
-
     }
 
     private void spliting(double tahun, List<mahasiswa> new_list_mahasiswa) {
         int biggest = 1;
-//        System.out.println("TAHUN = " + tahun);
         for (int i = 0; i < new_list_mahasiswa.size(); i++) {
             mahasiswa curr_mahasiswa = new_list_mahasiswa.get(i);
             boolean stat = true;
             while (stat) {
                 for (int j = 0; j < this.n_partition; j++) {
                     TreeMap<String, List<mahasiswa>> list_part = partition.get(j);
-//                    System.out.println("START Partition[" + j + "] --> " + list_part.values());
                     List<mahasiswa> recent = list_part.get("" + tahun);
                     if (recent.size() < biggest) {
                         list_part.get(tahun + "").add(curr_mahasiswa);
-//                        System.out.println("END Partition[" + j + "] --> " + partition.get(j).values());
                         stat = false;
                         break;
                     }
-
                     if (j + 1 == n_partition) {
                         biggest += 1;
                     }
