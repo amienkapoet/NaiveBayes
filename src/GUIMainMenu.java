@@ -29,7 +29,6 @@ public class GUIMainMenu extends javax.swing.JFrame {
     /**
      * Creates new form GUIMainMenu
      */
-    TreeMap<String, String> predict_data = new TreeMap<>();
     String temp = new String();
     main main = new main();
 
@@ -71,7 +70,7 @@ public class GUIMainMenu extends javax.swing.JFrame {
             }
         });
 
-        filePath.setText("D:\\FADEL SKRIPSI FINAL\\Validasi V3\\NaiveBayes-master\\TestingInput\\TestingInput.csv");
+        filePath.setText("C:\\Users\\ZerD\\Documents\\Work\\Fadel\\f\\src\\TestingInput.csv");
         filePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 filePathActionPerformed(evt);
@@ -161,23 +160,15 @@ public class GUIMainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_filePathActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        Scanner sc = new Scanner(System.in);
-//        System.out.println("(1) Pengujian \n(2) Prediksi \nPilih Mode : ");
-        int mode = 2;
-        int n_partition = 1;
-//        if (mode == 1) {
-//            System.out.println("Masukkan jumlah partisi : ");
-//            n_partition = sc.nextInt();
-//        }
+
         String folder_path = "src\\AllData\\";
 //        String folder_path = "src\\DataTesting\\";
         File folder = new File(folder_path);
         File[] listOfFiles = folder.listFiles();
-        readCSV data = new readCSV(mode, n_partition);
-        NaiveBayes nb = new NaiveBayes(data.data_mahasiswa, data.jumlahMahasiswa);
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                String filename = folder_path + listOfFiles[i].getName();
+        readCSV data = new readCSV(2, 1);
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.isFile()) {
+                String filename = folder_path + listOfFile.getName();
                 String[] filenames = filename.split(".csv")[0].split(" ");
                 double tahun = Double.parseDouble(filenames[2]) - Double.parseDouble(filenames[0].split("20")[1]);
                 String semester = filenames[1];
@@ -194,76 +185,30 @@ public class GUIMainMenu extends javax.swing.JFrame {
             }
         }
 
+        NaiveBayes nb = new NaiveBayes(data.data_mahasiswa, data.jumlahMahasiswa);
         System.out.println("JUMLAH MAHASISWA : " + data.jumlahMahasiswa);
 
-        String[] filter = new String[]{"Algoritma & Struktur Data", "Sistem Dijital", "Desain & Analisis Algoritma", "Manajemen Informasi & Basis Data", "Sistem Operasi"};
-
+//        String[] filter = new String[]{"Algoritma & Struktur Data", "Sistem Dijital", "Desain & Analisis Algoritma", "Manajemen Informasi & Basis Data", "Sistem Operasi"};
         try {
-            //        if (mode == 1) {
-//            int n = 1;
-//            List<TreeMap<String, List<mahasiswa>>> partition = data.partition;
-//            for (int i = 0; i < n_partition; i++) {
-//                List<mahasiswa> data_test = new ArrayList<>();
-//                TreeMap<String, List<mahasiswa>> data_train = defineDataTrain();
-//
-//                System.out.println("PARTITION " + (i + 1));
-//                int n_data_test = 0;
-//                int n_data_train = 0;
-//                for (int j = 0; j < n_partition; j++) {
-//                    TreeMap<String, List<mahasiswa>> curr_partition = partition.get(j);
-//
-//                    if (i == j) {
-//                        for (Map.Entry<String, List<mahasiswa>> entry : curr_partition.entrySet()) {
-//                            data_test.addAll(entry.getValue());
-//                        }
-//                    } else {
-//                        curr_partition.entrySet().forEach((entry) -> {
-//                            String key = entry.getKey();
-//                            List<mahasiswa> vals = entry.getValue();
-//                            List<mahasiswa> recent = data_train.get(key);
-//                            recent.addAll(vals);
-//                            data_train.replace(key, recent);
-//                        });
-//                    }
-//
-//                }
-//
-//                for (Map.Entry<String, List<mahasiswa>> entry : data_train.entrySet()) {
-//                    String key = entry.getKey();
-//                    List<mahasiswa> value = entry.getValue();
-//                    n_data_train += value.size();
-//                }
-//                System.out.println("Total test = " + data_test.size());
-//                System.out.println("Total train = " + n_data_train);
-//                for (Iterator<mahasiswa> iterator = data_test.iterator(); iterator.hasNext();) {
-//                    mahasiswa m = iterator.next();
-//                    System.out.println("Mahasiswa ke-" + n);
-//                    System.out.println("info = " + m.info);
-//                    TreeMap<String, String> nilai = filterNilai(m.nilai, filter);
-//                    NaiveBayes nb = new NaiveBayes(data_train, n_data_train);
-//                    nb.predict(nilai);
-//                    n++;
-//                }
-//            }
-//        } else {
-            this.insertMatkul(temp);
+            TreeMap<String, String> predict_data = this.insertMatkul(temp);
+            nb.predict(predict_data);
+            this.boxResult.setText(nb.res);
         } catch (IOException ex) {
             Logger.getLogger(GUIMainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        nb.predict(predict_data);
-        this.boxResult.setText(nb.res);
     }
-    
-    public void insertMatkul(String path_matkul) throws IOException {
+
+    public TreeMap<String, String> insertMatkul(String path_matkul) throws IOException {
+        TreeMap<String, String> predict_data = new TreeMap<>();
         List<String> dataListMatkul = Files.readAllLines(Paths.get(path_matkul));
         for (String line : dataListMatkul) {
             String matkul[] = line.split(";");
+            predict_data.put(matkul[0].trim(), matkul[1].trim());
 
-            predict_data.put(matkul[0], matkul[1]);
-            
         }
-
-//        }
+//        System.out.println("--> "+predict_data.keySet());
+//        System.out.println("--> "+predict_data.values());
+        return predict_data;
     }//GEN-LAST:event_startButtonActionPerformed
 
     /**

@@ -107,10 +107,11 @@ public class main {
             }
         } else {
             TreeMap<String, String> predict_data = new TreeMap<>();
-            predict_data.put("Algoritma & Struktur Data", "B");
-            predict_data.put("Pemrograman Berorientasi Objek", "B");
-            predict_data.put("Manajemen Informasi & Basis Data", "C");
-            predict_data.put("Desain & Analisis Algoritma", "C");
+            predict_data.put("Algoritma & Struktur Data", "E");
+            predict_data.put("Desain & Analisis Algoritma", "D");
+            predict_data.put("Manajemen Informasi & Basis Data", "D");
+            predict_data.put("Sistem Dijital", "D");
+            predict_data.put("Sistem Operasi", "D");
 
             System.out.println(predict_data.keySet());
             System.out.println(predict_data.values());
