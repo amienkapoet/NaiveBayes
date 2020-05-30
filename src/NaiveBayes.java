@@ -15,10 +15,13 @@ import java.util.TreeMap;
  */
 public class NaiveBayes {
 
+    
     private TreeMap<String, List<mahasiswa>> data_mahasiswa;
     private TreeMap<String, TreeMap<String, Double>> probs;
     private double jumlahMahasiswa;
-
+    String res="";
+    
+    
     public NaiveBayes(TreeMap<String, List<mahasiswa>> data_mahasiswa, double jumlahMahasiswa) {
         this.data_mahasiswa = data_mahasiswa;
         this.jumlahMahasiswa = jumlahMahasiswa;
@@ -57,7 +60,7 @@ public class NaiveBayes {
         }
     }
 
-    private void printPredict() {
+    private String printPredict() {
         String graduate = "-";
         double max = 0;
         for (Map.Entry<String, Double> entry : predict.entrySet()) {
@@ -68,9 +71,14 @@ public class NaiveBayes {
                 graduate = key;
             }
         }
-        System.out.println("GRADUATE IN : " + graduate + " years.");
-        System.out.printf("Predict Value : %.20f \n", max);
+        System.out.println("GRADUATE IN : " + graduate + " years. ");
+        System.out.printf("Predict Value : %.20f \n" , max);
         System.out.println("_____________________________________________________________________________");
+        res+="GRADUATE IN : " + graduate + " years. "+"\n";
+        res+="Predict Value : " + Double.toString(max);
+        return res;
+        
+        
     }
 
     TreeMap<String, Double> predict = new TreeMap<>();
