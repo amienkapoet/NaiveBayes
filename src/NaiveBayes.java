@@ -29,7 +29,7 @@ public class NaiveBayes {
 
     public void predict(TreeMap<String, String> predict_data) {
         calcProbs(predict_data);
-//        printProbs();
+        printProbs();
         doPredict();
         printPredict();
     }
@@ -66,16 +66,18 @@ public class NaiveBayes {
         for (Map.Entry<String, Double> entry : predict.entrySet()) {
             String key = entry.getKey();
             Double value = entry.getValue();
+            this.res += key + " = "+String.format("%.20f",value)+"\n";
             if (value > max) {
                 max = value;
                 graduate = key;
             }
         }
+        res += "___________________________________________ \n";
         System.out.println("GRADUATE IN : " + graduate + " years. ");
         System.out.printf("Predict Value : %.20f \n" , max);
         System.out.println("_____________________________________________________________________________");
         res+="GRADUATE IN : " + graduate + " years. "+"\n";
-        res+="Predict Value : " + Double.toString(max);
+        res+="Predict Value : " + String.format("%.20f",max);
         return res;
         
         
